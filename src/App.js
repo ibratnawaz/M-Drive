@@ -7,6 +7,7 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import ResetPassword from "./components/auth/ResetPassword";
+import Welcome from "./components/pages/Welcome";
 import NotFound from "./components/pages/NotFound";
 import Alerts from "./components/layouts/Alerts";
 import PrivateRoute from "./components/routing/PrivateRoute";
@@ -25,6 +26,7 @@ function App() {
             <div className='container'>
               <Alerts />
               <Switch>
+                <Route exact path='/' component={Welcome} />
                 <PrivateRoute exact path='/home' component={Home} />
                 <Route exact path='/about' component={About} />
                 <Route exact path='/register' component={Register} />

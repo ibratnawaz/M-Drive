@@ -18,7 +18,7 @@ import {
   RESET_FAIL,
 } from "../types";
 
-const apiUrl = "http://localhost:5000";
+const apiUrl = "https://m-drive-api.herokuapp.com/";
 
 const AuthState = (props) => {
   const initialState = {
