@@ -1,26 +1,48 @@
 import React, { useState, useContext, useEffect } from "react";
-// import AlertContext from "../../context/alert/alertContext";
+import AlertContext from "../../context/alert/alertContext";
 import AuthContext from "../../context/auth/authContext";
 
 const Register = (props) => {
-  //   const alertContext = useContext(AlertContext);
+  const alertContext = useContext(AlertContext);
   const authContext = useContext(AuthContext);
 
-  // const { setAlert } = alertContext;
-  const { register, error, clearErrors, isAuthenticated } = authContext;
+  const { setAlert } = alertContext;
+  const {
+    register,
+    error,
+    clearErrors,
+    isAuthenticated,
+    userRegistered,
+  } = authContext;
 
   useEffect(() => {
-    if (isAuthenticated) {
-      props.history.push("/");
+    if (isAuthenticated && authContext.user.isActivated) {
+      props.history.push("/home");
     }
 
-    if (error === "User already exists") {
-      console.log(error);
-      //   setAlert(error, "danger");
+    if (error) {
+      if (error.includes("E11000"))
+        setAlert("Email already taken...", "danger");
+      else setAlert(error, "danger");
       clearErrors();
     }
+
+    if (userRegistered) {
+      setAlert(
+        "Account created. Please activate your account by clicking the link send to your e-mail and then login",
+        "success"
+      );
+      clearErrors();
+      setUser({
+        first_name: "",
+        last_name: "",
+        email: "",
+        password: "",
+        password2: "",
+      });
+    }
     // eslint-disable-next-line
-  }, [error, isAuthenticated, props.history]);
+  }, [error, isAuthenticated, props.history, userRegistered]);
 
   const [user, setUser] = useState({
     first_name: "",
@@ -42,11 +64,9 @@ const Register = (props) => {
       email === "" ||
       password === ""
     ) {
-      console.log("Please enter all fields");
-      //   setAlert("Please enter all fields", "danger");
+      setAlert("Please enter all fields", "danger");
     } else if (password !== password2) {
-      console.log("Passwords do not match");
-      //   setAlert("Passwords do not match", "danger");
+      setAlert("Passwords do not match", "danger");
     } else {
       register({
         first_name,
@@ -95,6 +115,10 @@ const Register = (props) => {
             onChange={onChange}
             required
           />
+          <small className='text-muted'>
+            Please provide a valid e-mail to receive the link to activate your
+            account
+          </small>
         </div>
         <div className='form-group'>
           <label htmlFor='password'>Password</label>

@@ -2,14 +2,11 @@ import React, { Fragment, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/auth/authContext";
-// import ContactContext from "../../context/contact/contactContext";
 
 const Navbar = ({ title, icon }) => {
   const authContext = useContext(AuthContext);
-  // const contactContext = useContext(ContactContext);
 
   const { isAuthenticated, logout, user, loadUser } = authContext;
-  // const { clearContacts } = contactContext;
 
   useEffect(() => {
     loadUser();
@@ -18,14 +15,13 @@ const Navbar = ({ title, icon }) => {
 
   const onLogout = () => {
     logout();
-    // clearContacts();
   };
 
   const authLinks = (
     <Fragment>
       <li>Hello {user && user.first_name}</li>
       <li>
-        <a onClick={onLogout} href='#!'>
+        <a onClick={onLogout} href='#'>
           <i className='fas fa-sign-out-alt' />{" "}
           <span className='hide-sm'>Logout</span>
         </a>
@@ -51,7 +47,7 @@ const Navbar = ({ title, icon }) => {
           <i className={icon} /> {title}
         </Link>
       </h1>
-      <ul>{isAuthenticated ? authLinks : guestLinks}</ul>
+      <ul>{isAuthenticated && user.isActivated ? authLinks : guestLinks}</ul>
     </div>
   );
 };
@@ -63,7 +59,7 @@ Navbar.propTypes = {
 
 Navbar.defaultProps = {
   title: "M-Drive",
-  icon: "fas fa-id-card-alt",
+  icon: "fas fa-box-open",
 };
 
 export default Navbar;

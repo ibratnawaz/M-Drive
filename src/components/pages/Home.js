@@ -3,7 +3,7 @@ import React, { Fragment } from "react";
 const Home = () => (
   <Fragment>
     <p>Home Component</p>
-    <p>This is where several components come.</p>
+    <p>This is where dashboard comes.</p>
   </Fragment>
 );
 

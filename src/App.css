@@ -3,6 +3,7 @@
 /* Global Styles */
 :root {
   --primary-color: #003699;
+  --muted-color: #7d858c;
   --dark-color: #333333;
   --light-color: #f4f4f4;
   --danger-color: #dc3545;
@@ -64,6 +65,10 @@ img {
 .lead {
   font-size: 1.5rem;
   margin-bottom: 1rem;
+}
+
+.text-muted {
+  color: var(--muted-color);
 }
 
 .text-center {
