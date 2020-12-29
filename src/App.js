@@ -5,6 +5,8 @@ import Home from "./components/pages/Home";
 import About from "./components/pages/About";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import ForgotPassword from "./components/auth/ForgotPassword";
+import ResetPassword from "./components/auth/ResetPassword";
 import NotFound from "./components/pages/NotFound";
 import Alerts from "./components/layouts/Alerts";
 import PrivateRoute from "./components/routing/PrivateRoute";
@@ -27,6 +29,16 @@ function App() {
                 <Route exact path='/about' component={About} />
                 <Route exact path='/register' component={Register} />
                 <Route exact path='/login' component={Login} />
+                <Route
+                  exact
+                  path='/forgot/password'
+                  component={ForgotPassword}
+                />
+                <Route
+                  exact
+                  path='/reset/password/:id'
+                  component={ResetPassword}
+                />
                 <Route component={NotFound} />
               </Switch>
             </div>

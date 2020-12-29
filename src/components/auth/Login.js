@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 import AuthContext from "../../context/auth/authContext";
 import AlertContext from "../../context/alert/alertContext";
 
@@ -7,7 +8,7 @@ const Login = (props) => {
   const authContext = useContext(AuthContext);
 
   const { setAlert } = alertContext;
-  const { login, error, clearErrors, isAuthenticated } = authContext;
+  const { login, error, clearErrors, isAuthenticated, message } = authContext;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -18,8 +19,13 @@ const Login = (props) => {
       setAlert(error, "danger");
       clearErrors();
     }
+
+    if (message) {
+      setAlert(message, "success");
+      clearErrors();
+    }
     // eslint-disable-next-line
-  }, [error, isAuthenticated, props.history]);
+  }, [error, message, isAuthenticated, props.history]);
 
   const [user, setUser] = useState({
     email: "",
@@ -33,7 +39,6 @@ const Login = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     if (email === "" || password === "") {
-      console.log("Please fill in all fields");
       setAlert("Please fill in all fields", "danger");
     } else {
       login({
@@ -76,6 +81,12 @@ const Login = (props) => {
           value='Login'
           className='btn btn-primary btn-block'
         />
+        <Link to='/register'>
+          <p className='text-center'>New User? Register</p>
+        </Link>
+        <Link to='/forgot/password'>
+          <p className='text-center'>Forgot Password? Click Here</p>
+        </Link>
       </form>
     </div>
   );

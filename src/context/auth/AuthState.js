@@ -12,6 +12,10 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   CLEAR_ERRORS,
+  RESET_LINK_SEND,
+  RESET_LINK_FAIL,
+  RESET_SUCCESS,
+  RESET_FAIL,
 } from "../types";
 
 const AuthState = (props) => {
@@ -22,6 +26,7 @@ const AuthState = (props) => {
     user: null,
     error: null,
     userRegistered: null,
+    message: null,
   };
 
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -41,7 +46,7 @@ const AuthState = (props) => {
       console.log(err.response.data.error);
       dispatch({
         type: AUTH_ERROR,
-        payload: err.response.data.error,
+        payload: null,
       });
     }
   };
@@ -87,6 +92,7 @@ const AuthState = (props) => {
 
       loadUser();
     } catch (err) {
+      console.log(err.response.data);
       dispatch({
         type: LOGIN_FAIL,
         payload: err.response.data,
@@ -112,6 +118,56 @@ const AuthState = (props) => {
   // Clear Errors
   const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
 
+  // Forgot Password
+  const forgotPassword = async (formData) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      let res = await axios.post(
+        "/api/users/forgot/password",
+        formData,
+        config
+      );
+
+      dispatch({
+        type: RESET_LINK_SEND,
+        payload: res.data,
+      });
+    } catch (err) {
+      console.log(err.response.data.error);
+      dispatch({
+        type: RESET_LINK_FAIL,
+        payload: err.response.data.error,
+      });
+    }
+  };
+
+  // Reset Password
+  const resetPassword = async (formData) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      let res = await axios.put("/api/users/reset/password", formData, config);
+
+      dispatch({
+        type: RESET_SUCCESS,
+        payload: res.data,
+      });
+    } catch (err) {
+      console.log(err.response.data);
+      dispatch({
+        type: RESET_FAIL,
+        payload: err.response.data,
+      });
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -121,11 +177,14 @@ const AuthState = (props) => {
         user: state.user,
         userRegistered: state.userRegistered,
         error: state.error,
+        message: state.message,
         register,
         loadUser,
         login,
         logout,
         clearErrors,
+        forgotPassword,
+        resetPassword,
       }}
     >
       {props.children}

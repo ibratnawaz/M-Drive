@@ -7,6 +7,10 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   CLEAR_ERRORS,
+  RESET_LINK_FAIL,
+  RESET_LINK_SEND,
+  RESET_SUCCESS,
+  RESET_FAIL,
 } from "../types";
 
 export default (state, action) => {
@@ -33,10 +37,19 @@ export default (state, action) => {
         isAuthenticated: true,
         loading: false,
       };
+    case RESET_LINK_SEND:
+    case RESET_SUCCESS:
+      return {
+        ...state,
+        message: action.payload,
+        loading: false,
+      };
     case REGISTER_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT:
+    case RESET_LINK_FAIL:
+    case RESET_FAIL:
       localStorage.removeItem("token");
       return {
         ...state,
@@ -45,13 +58,15 @@ export default (state, action) => {
         loading: false,
         user: null,
         userRegistered: null,
-        error: null,
+        error: action.payload,
+        message: null,
       };
     case CLEAR_ERRORS:
       return {
         ...state,
         error: null,
         userRegistered: null,
+        message: null,
       };
     default:
       return state;
