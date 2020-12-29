@@ -18,6 +18,8 @@ import {
   RESET_FAIL,
 } from "../types";
 
+const apiUrl = "http://localhost:5000";
+
 const AuthState = (props) => {
   const initialState = {
     token: localStorage.getItem("token"),
@@ -36,7 +38,7 @@ const AuthState = (props) => {
     setAuthToken(localStorage.token);
 
     try {
-      const res = await axios.get("/api/users/");
+      const res = await axios.get(`${apiUrl}/api/users/`);
 
       dispatch({
         type: USER_LOADED,
@@ -60,7 +62,11 @@ const AuthState = (props) => {
     };
 
     try {
-      const res = await axios.post("/api/users/register", formData, config);
+      const res = await axios.post(
+        `${apiUrl}/api/users/register`,
+        formData,
+        config
+      );
 
       dispatch({
         type: REGISTER_SUCCESS,
@@ -83,7 +89,11 @@ const AuthState = (props) => {
     };
 
     try {
-      const res = await axios.post("/api/users/login", formData, config);
+      const res = await axios.post(
+        `${apiUrl}/api/users/login`,
+        formData,
+        config
+      );
 
       dispatch({
         type: LOGIN_SUCCESS,
@@ -104,7 +114,7 @@ const AuthState = (props) => {
   const logout = async () => {
     try {
       setAuthToken(localStorage.token);
-      await axios.get("/api/users/logout");
+      await axios.get(`${apiUrl}/api/users/logout`);
       dispatch({ type: LOGOUT });
     } catch (err) {
       console.log(err.response.data.error);
@@ -127,7 +137,7 @@ const AuthState = (props) => {
     };
     try {
       let res = await axios.post(
-        "/api/users/forgot/password",
+        `${apiUrl}/api/users/forgot/password`,
         formData,
         config
       );
@@ -153,7 +163,11 @@ const AuthState = (props) => {
       },
     };
     try {
-      let res = await axios.put("/api/users/reset/password", formData, config);
+      let res = await axios.put(
+        `${apiUrl}/api/users/reset/password`,
+        formData,
+        config
+      );
 
       dispatch({
         type: RESET_SUCCESS,
