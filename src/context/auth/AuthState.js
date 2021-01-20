@@ -24,7 +24,7 @@ import {
   FILE_UPLOAD_FAIL,
 } from '../types'
 
-const apiUrl = 'http://localhost:5000' //"https://m-drive-api.herokuapp.com";
+const apiUrl = 'https://m-drive-api.herokuapp.com' //'http://localhost:5000'
 
 const AuthState = (props) => {
   const initialState = {
