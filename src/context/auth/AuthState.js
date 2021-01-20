@@ -1,8 +1,8 @@
-import React, { useReducer } from "react";
-import axios from "axios";
-import AuthContext from "./authContext";
-import authReducer from "./authReducer";
-import setAuthToken from "../../utils/setAuthToken";
+import React, { useReducer } from 'react'
+import axios from 'axios'
+import AuthContext from './authContext'
+import authReducer from './authReducer'
+import setAuthToken from '../../utils/setAuthToken'
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -16,171 +16,231 @@ import {
   RESET_LINK_FAIL,
   RESET_SUCCESS,
   RESET_FAIL,
-} from "../types";
+  FILE_LIST_SUCCESS,
+  FILE_LIST_FAIL,
+  FILE_DELETE_SUCCESS,
+  FILE_DELETE_FAIL,
+  FILE_UPLOAD_SUCCESS,
+  FILE_UPLOAD_FAIL,
+} from '../types'
 
-const apiUrl = "https://m-drive-api.herokuapp.com";
+const apiUrl = 'http://localhost:5000' //"https://m-drive-api.herokuapp.com";
 
 const AuthState = (props) => {
   const initialState = {
-    token: localStorage.getItem("token"),
+    token: localStorage.getItem('token'),
     isAuthenticated: null,
     loading: true,
     user: null,
     error: null,
     userRegistered: null,
     message: null,
-  };
+    files: [],
+  }
 
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [state, dispatch] = useReducer(authReducer, initialState)
 
   // Load User
   const loadUser = async () => {
-    setAuthToken(localStorage.token);
+    setAuthToken(localStorage.token)
 
     try {
-      const res = await axios.get(`${apiUrl}/api/users/`);
+      const res = await axios.get(`${apiUrl}/api/users/`)
 
       dispatch({
         type: USER_LOADED,
         payload: res.data,
-      });
+      })
     } catch (err) {
-      console.log(err.response.data.error);
+      console.log(err.response.data.error)
       dispatch({
         type: AUTH_ERROR,
         payload: null,
-      });
+      })
     }
-  };
+  }
 
   // Register User
   const register = async (formData) => {
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-    };
+    }
 
     try {
       const res = await axios.post(
         `${apiUrl}/api/users/register`,
         formData,
         config
-      );
+      )
 
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data,
-      });
+      })
     } catch (err) {
       dispatch({
         type: REGISTER_FAIL,
         payload: err.response.data.error,
-      });
+      })
     }
-  };
+  }
 
   // Login User
   const login = async (formData) => {
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-    };
+    }
 
     try {
       const res = await axios.post(
         `${apiUrl}/api/users/login`,
         formData,
         config
-      );
+      )
 
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data,
-      });
+      })
 
-      loadUser();
+      loadUser()
     } catch (err) {
-      console.log(err.response.data);
+      console.log(err.response.data)
       dispatch({
         type: LOGIN_FAIL,
         payload: err.response.data,
-      });
+      })
     }
-  };
+  }
+
+  // User file list
+  const getFiles = async () => {
+    try {
+      setAuthToken(localStorage.token)
+      let res = await axios.get(`${apiUrl}/api/users/list`)
+
+      dispatch({ type: FILE_LIST_SUCCESS, payload: res.data })
+    } catch (err) {
+      console.log(err.response.data.error)
+      dispatch({
+        type: FILE_LIST_FAIL,
+        payload: err.response.data.error,
+      })
+    }
+  }
+
+  // Delete file
+  const removeFile = async (id) => {
+    try {
+      setAuthToken(localStorage.token)
+      let res = await axios.delete(`${apiUrl}/api/users/delete/${id}`)
+
+      dispatch({ type: FILE_DELETE_SUCCESS, payload: res.data })
+    } catch (err) {
+      console.log(err.response.data.error)
+      dispatch({
+        type: FILE_DELETE_FAIL,
+        payload: err.response.data.error,
+      })
+    }
+  }
+
+  // Upload file
+  const storeFile = async (formData) => {
+    try {
+      setAuthToken(localStorage.token)
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+      let res = await axios.post(`${apiUrl}/api/users/upload`, formData, config)
+
+      dispatch({ type: FILE_UPLOAD_SUCCESS, payload: res.data })
+    } catch (err) {
+      console.log(err.response.data.error)
+      dispatch({
+        type: FILE_UPLOAD_FAIL,
+        payload: err.response.data.error,
+      })
+    }
+  }
 
   // Logout
   const logout = async () => {
     try {
-      setAuthToken(localStorage.token);
-      await axios.get(`${apiUrl}/api/users/logout`);
-      dispatch({ type: LOGOUT });
+      setAuthToken(localStorage.token)
+      await axios.get(`${apiUrl}/api/users/logout`)
+      dispatch({ type: LOGOUT })
     } catch (err) {
-      console.log(err.response.data.error);
+      console.log(err.response.data.error)
       dispatch({
         type: AUTH_ERROR,
         payload: err.response.data.error,
-      });
+      })
     }
-  };
+  }
 
   // Clear Errors
-  const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
+  const clearErrors = () => dispatch({ type: CLEAR_ERRORS })
 
   // Forgot Password
   const forgotPassword = async (formData) => {
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-    };
+    }
     try {
       let res = await axios.post(
         `${apiUrl}/api/users/forgot/password`,
         formData,
         config
-      );
+      )
 
       dispatch({
         type: RESET_LINK_SEND,
         payload: res.data,
-      });
+      })
     } catch (err) {
-      console.log(err.response.data.error);
+      console.log(err.response.data.error)
       dispatch({
         type: RESET_LINK_FAIL,
         payload: err.response.data.error,
-      });
+      })
     }
-  };
+  }
 
   // Reset Password
   const resetPassword = async (formData) => {
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-    };
+    }
     try {
       let res = await axios.put(
         `${apiUrl}/api/users/reset/password`,
         formData,
         config
-      );
+      )
 
       dispatch({
         type: RESET_SUCCESS,
         payload: res.data,
-      });
+      })
     } catch (err) {
-      console.log(err.response.data);
+      console.log(err.response.data)
       dispatch({
         type: RESET_FAIL,
         payload: err.response.data,
-      });
+      })
     }
-  };
+  }
 
   return (
     <AuthContext.Provider
@@ -192,6 +252,7 @@ const AuthState = (props) => {
         userRegistered: state.userRegistered,
         error: state.error,
         message: state.message,
+        files: state.files,
         register,
         loadUser,
         login,
@@ -199,11 +260,13 @@ const AuthState = (props) => {
         clearErrors,
         forgotPassword,
         resetPassword,
-      }}
-    >
+        getFiles,
+        removeFile,
+        storeFile,
+      }}>
       {props.children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
-export default AuthState;
+export default AuthState

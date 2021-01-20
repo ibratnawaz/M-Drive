@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto");
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 
 /* Global Styles */
 :root {
@@ -17,7 +17,7 @@
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   background-color: #fff;
@@ -309,10 +309,10 @@ input {
   color: #888;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="date"],
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='date'],
 select,
 textarea {
   display: block;
@@ -322,7 +322,7 @@ textarea {
   border: 1px solid #ccc;
 }
 
-input[type="submit"],
+input[type='submit'],
 button {
   font: inherit;
 }
@@ -444,4 +444,76 @@ table th {
     text-align: center;
     justify-content: center;
   }
+}
+
+/* file container */
+.file-container {
+  margin: 80px 0 80px 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: start;
+}
+
+.file-box {
+  padding: 10px;
+  height: 32px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  margin: 0 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.file-title {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.overlay {
+  width: 100%;
+  height: inherit;
+  border: inherit;
+  border-radius: inherit;
+  position: absolute;
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.7);
+  transition: 0.5s ease;
+  opacity: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay a {
+  color: #aaa !important;
+  cursor: pointer;
+  margin: 8px;
+}
+
+.overlay a .delete {
+  color: red !important;
+}
+
+.overlay a:hover,
+.overlay a .delete:hover {
+  color: white !important;
+}
+
+.file-box:hover .overlay {
+  opacity: 1;
+}
+
+/* drop-zone */
+.dropzone {
+  text-align: center;
+  padding: 30px;
+  border: 3px dashed #eeeeee;
+  background-color: #fafafa;
+  color: #bdbdbd;
+  margin-bottom: 20px;
 }

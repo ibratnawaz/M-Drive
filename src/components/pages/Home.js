@@ -1,10 +1,12 @@
-import React, { Fragment } from "react";
+import React from 'react'
+import FileUploadContainer from './FileUploadContainer'
+import FileContainer from './FileContainer'
 
 const Home = () => (
-  <Fragment>
-    <p>Home Component</p>
-    <p>This is where dashboard comes.</p>
-  </Fragment>
-);
+  <>
+    <FileUploadContainer />
+    <FileContainer />
+  </>
+)
 
-export default Home;
+export default Home
